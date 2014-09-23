@@ -148,6 +148,17 @@ function append(coll, x) {
   throwProtocolError('append', coll);
 }
 
+function makeAppend(coll) {
+  if(isArray(coll)) {
+    return function (coll, x) {
+      coll.push(x);
+      return coll;
+    };
+  } else {
+    return append;
+  }
+}
+
 function empty(coll) {
   if(isArray(coll)) {
     return [];
@@ -162,7 +173,7 @@ function empty(coll) {
 }
 
 function sequence(xform, coll) {
-  return transduce(xform, append, empty(coll), coll);
+  return transduce(xform, makeAppend(coll), empty(coll), coll);
 }
 
 function transduce(xform, f, init, coll) {
